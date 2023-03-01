@@ -89,7 +89,7 @@ for file in files:
                                   "sha1": hl.sha1(file_contents.content).hexdigest(),
                                   "sha256": hl.sha256(file_contents.content).hexdigest(),
                                   "size": file["attributes"]["size"]})
-        if not os.path.exists(config["General"]["DownloadDirectory"] + "optionalMods"):
+        if not os.path.exists(config["General"]["DownloadDirectory"] + "/optionalMods"):
             os.makedirs(config["General"]
                         ["DownloadDirectory"] + "optionalMods")
         with open(config["General"]["DownloadDirectory"] + "/optionalMods/" + file["attributes"]["name"], "wb") as file:
