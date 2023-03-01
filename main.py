@@ -1,8 +1,8 @@
+import hashlib as hl
+import json
+import os
 from configparser import ConfigParser
 from urllib.parse import quote
-import json
-import hashlib as hl
-import os
 
 import requests
 
