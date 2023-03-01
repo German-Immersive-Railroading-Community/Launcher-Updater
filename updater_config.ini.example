@@ -1,0 +1,13 @@
+[General]
+APIKey = 1234567890
+PanelURL = http://panel.example.com
+IndexFilePath = /home/example/public_html/index.json
+DownloadURLBase = http://example.com/download
+ServerIdentifierShort = 1bf45gh
+DownloadDirectory = /home/example/public_html/download/
+
+[/ExampleDir]
+Exceptions = examplemod.jar,examplemod2.jar
+
+[/ExampleDir2/subdir]
+Exceptions = examplemod3.jar
