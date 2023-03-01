@@ -92,7 +92,7 @@ for file in files:
         if not os.path.exists(config["General"]["DownloadDirectory"] + "optionalMods"):
             os.makedirs(config["General"]
                         ["DownloadDirectory"] + "optionalMods")
-        with open(config["General"]["DownloadDirectory"] + "optionalMods/" + file["attributes"]["name"], "wb") as file:
+        with open(config["General"]["DownloadDirectory"] + "/optionalMods/" + file["attributes"]["name"], "wb") as file:
             file.write(file_contents.content)
 index["optionalMods"] = optional_mod_list
 
