@@ -85,7 +85,7 @@ for file in files:
             print(f"{request_url}\nError: " + file_contents.text)
             exit(1)
         optional_mod_list.append({"name": file["attributes"]["name"],
-                                  "url": config["General"]["DownloadURLBase"] + "additional-mods/" + file["attributes"]["name"],
+                                  "url": config["General"]["DownloadURLBase"] + "/additional-mods/" + file["attributes"]["name"],
                                   "sha1": hl.sha1(file_contents.content).hexdigest(),
                                   "sha256": hl.sha256(file_contents.content).hexdigest(),
                                   "size": file["attributes"]["size"]})
