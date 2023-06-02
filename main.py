@@ -8,6 +8,8 @@ import bcrypt
 import mysql.connector
 import requests
 
+print("Starting...")
+
 config = ConfigParser()
 config.read("updater_config.ini")
 
