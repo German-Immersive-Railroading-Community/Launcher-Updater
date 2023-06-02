@@ -6,6 +6,13 @@ DownloadURLBase = http://example.com/download
 ServerIdentifierShort = 1bf45gh
 DownloadDirectory = /home/example/public_html/download/
 
+[Database]
+Host=myhost.myserver.com
+Username=myuser
+Password=mypassword
+Database=mydatabase
+Port=3306
+
 [/ExampleDir]
 Exceptions = examplemod.jar,examplemod2.jar
 

@@ -3,11 +3,36 @@ import json
 import os
 from configparser import ConfigParser
 from urllib.parse import quote
+import mysql.connector
+import bcrypt
 
 import requests
 
 config = ConfigParser()
 config.read("updater_config.ini")
+
+user_id = input("Enter your user ID: ")
+my_db = mysql.connector.connect(
+    host=config["Database"]["Host"],
+    user=config["Database"]["Username"],
+    password=config["Database"]["Password"],
+    database=config["Database"]["Database"],
+    port=config["Database"]["Port"]
+)
+cursor = my_db.cursor()
+cursor.execute("SELECT * FROM Passwords WHERE userID = %s", (user_id,))
+result = cursor.fetchone()
+if result is None:
+    print("Error: User ID not found")
+    exit(1)
+user_password = input("Enter your password: ")
+if not bcrypt.checkpw(user_password.encode("utf-8"), result[1].encode("utf-8")):
+    print("Error: Incorrect password")
+    exit(1)
+cursor.execute(
+    "INSERT INTO Accesses (Date, Time, userID) VALUES (CURDATE(), CURTIME(), %s)", (user_id,))
+my_db.commit()
+
 
 server_identifier = config["General"]["ServerIdentifierShort"]
 request_base_url = config["General"]["PanelURL"] + \
@@ -23,7 +48,7 @@ with open(config["General"]["IndexFilePath"], "r") as index_file:
 
 index["additional"] = {}
 for section in config.sections():
-    if section == "General":
+    if section == "General" or section == "Database":
         continue
     file_list = []
     exceptions = config[section]["Exceptions"].replace(" ", "").split(",")
@@ -98,3 +123,5 @@ index["optionalMods"] = optional_mod_list
 
 with open(config["General"]["IndexFilePath"], "w") as index_file:
     json.dump(index, index_file)
+
+print("Done")
