@@ -3,9 +3,9 @@ import json
 import os
 from configparser import ConfigParser
 from urllib.parse import quote
-import mysql.connector
-import bcrypt
 
+import bcrypt
+import mysql.connector
 import requests
 
 config = ConfigParser()
