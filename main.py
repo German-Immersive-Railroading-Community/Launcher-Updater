@@ -13,25 +13,24 @@ print("Starting...")
 config = ConfigParser()
 config.read("updater_config.ini")
 
-user_id = input("Enter your user ID: ")
-try:
-    my_db = mysql.connector.connect(
-        host=config["Database"]["Host"],
-        user=config["Database"]["Username"],
-        password=config["Database"]["Password"],
-        database=config["Database"]["Database"],
-        port=config["Database"]["Port"]
-    )
-    cursor = my_db.cursor()
-    cursor.execute("SELECT * FROM Passwords WHERE userID = %s", (user_id,))
-    result = cursor.fetchone()
-    if result is None:
-        print("Error: User ID not found")
-        exit(1)
-except Exception as e:
-    print("Error: " + str(e))
+print("Enter your user ID: ")
+user_id = input()
+my_db = mysql.connector.connect(
+    host=config["Database"]["Host"],
+    user=config["Database"]["Username"],
+    password=config["Database"]["Password"],
+    database=config["Database"]["Database"],
+    port=config["Database"]["Port"]
+)
+cursor = my_db.cursor()
+cursor.execute("SELECT * FROM Passwords WHERE userID = %s", (user_id,))
+result = cursor.fetchone()
+if result is None:
+    print("Error: User ID not found")
     exit(1)
-user_password = input("Enter your password: ")
+
+print("Enter your password: ")
+user_password = input()
 if not bcrypt.checkpw(user_password.encode("utf-8"), result[1].encode("utf-8")):
     print("Error: Incorrect password")
     exit(1)
@@ -39,6 +38,7 @@ cursor.execute(
     "INSERT INTO Accesses (Date, Time, userID) VALUES (CURDATE(), CURTIME(), %s)", (user_id,))
 my_db.commit()
 
+print("Authentication successful")
 
 server_identifier = config["General"]["ServerIdentifierShort"]
 request_base_url = config["General"]["PanelURL"] + \
@@ -131,3 +131,4 @@ with open(config["General"]["IndexFilePath"], "w") as index_file:
     json.dump(index, index_file)
 
 print("Done")
+exit(0)
