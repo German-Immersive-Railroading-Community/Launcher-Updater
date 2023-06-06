@@ -14,18 +14,22 @@ config = ConfigParser()
 config.read("updater_config.ini")
 
 user_id = input("Enter your user ID: ")
-my_db = mysql.connector.connect(
-    host=config["Database"]["Host"],
-    user=config["Database"]["Username"],
-    password=config["Database"]["Password"],
-    database=config["Database"]["Database"],
-    port=config["Database"]["Port"]
-)
-cursor = my_db.cursor()
-cursor.execute("SELECT * FROM Passwords WHERE userID = %s", (user_id,))
-result = cursor.fetchone()
-if result is None:
-    print("Error: User ID not found")
+try:
+    my_db = mysql.connector.connect(
+        host=config["Database"]["Host"],
+        user=config["Database"]["Username"],
+        password=config["Database"]["Password"],
+        database=config["Database"]["Database"],
+        port=config["Database"]["Port"]
+    )
+    cursor = my_db.cursor()
+    cursor.execute("SELECT * FROM Passwords WHERE userID = %s", (user_id,))
+    result = cursor.fetchone()
+    if result is None:
+        print("Error: User ID not found")
+        exit(1)
+except Exception as e:
+    print("Error: " + str(e))
     exit(1)
 user_password = input("Enter your password: ")
 if not bcrypt.checkpw(user_password.encode("utf-8"), result[1].encode("utf-8")):
