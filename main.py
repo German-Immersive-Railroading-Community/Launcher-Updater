@@ -97,6 +97,7 @@ for section in config.sections():
     section = section.replace("/", "", 1)
     if "/" in section:
         directorys = section.split("/")
+        index["additional"][directorys[0]] = {}
         index["additional"][directorys[0]][directorys[1]] = file_list
     else:
         index["additional"][section] = file_list
