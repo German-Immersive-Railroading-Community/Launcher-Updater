@@ -90,11 +90,7 @@ for section in config.sections():
                 os.makedirs(config["General"]["DownloadDirectory"] + section)
             with open(config["General"]["DownloadDirectory"] + section + "/" + file["attributes"]["name"], "wb") as file:
                 file.write(file_contents.content)
-    if "/" in section.replace("/", "", 1):
-        directorys = section.split("/")
-        index["additional"][directorys[0]][directorys[1]] = file_list
-    else:
-        index["additional"][section.replace("/", "", 1)] = file_list
+    index["additional"][section.replace("/", "", 1)] = file_list
 index["wholeSize"] = whole_mod_size
 
 optional_mod_list = []
