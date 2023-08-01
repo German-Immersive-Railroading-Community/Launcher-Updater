@@ -1,7 +1,6 @@
 import hashlib as hl
 import json
 import os
-import time
 from configparser import ConfigParser
 from urllib.parse import quote
 
@@ -52,9 +51,6 @@ headers = {
 whole_mod_size = 0
 with open(config["General"]["IndexFilePath"], "r") as index_file:
     index = json.load(index_file)
-
-if not "lastFullUpdate" in index:
-    index["lastFullUpdate"] = 0
 
 index["additional"] = {}
 for section in config.sections():
@@ -134,39 +130,6 @@ for file in files:
         with open(config["General"]["DownloadDirectory"] + "/optionalMods/" + file["attributes"]["name"], "wb") as file:
             file.write(file_contents.content)
 index["optionalMods"] = optional_mod_list
-
-# If the last full update is more than 30 days ago, ask whether to do a full update or not
-if time.time() - index["lastFullUpdate"] > 2.628e6:
-    print("""The last full update is more than 30 days ago. Do you want to do a full update? (y/n)\n
-          This will take a while; if in doubt type n""")
-    answer = input().lower()
-    if answer == "y":
-        index["lastFullUpdate"] = time.time()
-        # Go trough every section and all subsections, except additional and optionalMods, recursively in the index dict and look for a "url" key
-        # If the key exists, download the file and calculate the sha256 hash
-        # Add that hash to the index in the same section and subsection, with "sha256" as key
-        # The links are direct donwload links, no need to make a link
-        # There may be more than one subsection, so the function needs to be recursive
-        # There are no lists, everything is a dict
-
-        def recursive_hashing(dict: dict):
-            for key, value in dict.items():
-                if key == "url":
-                    file_contents = requests.get(value)
-                    if file_contents.status_code != 200:
-                        print("Error: " + file_contents.text)
-                        continue
-                    dict["sha256"] = hl.sha256(file_contents.content).hexdigest()
-                elif key == "additional" or key == "optionalMods":
-                    continue
-                else:
-                    recursive_hashing(value)
-        recursive_hashing(index)
-    elif answer == "n":
-        pass
-    else:
-        print("Invalid answer; assuming n")
-        pass
 
 with open(config["General"]["IndexFilePath"], "w") as index_file:
     json.dump(index, index_file)
